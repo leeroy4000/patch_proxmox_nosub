@@ -1,6 +1,3 @@
-Absolutely! Here's the complete `README.md` file with all the steps included:
-
-```markdown
 # Patch Proxmox No-Subscription Warning
 
 This script removes the **"No valid subscription"** warning in Proxmox VE's web interface.
@@ -44,5 +41,3 @@ If a Proxmox update replaces `proxmoxlib.js`, you may need to **rerun the script
 ## Disclaimer
 Use this script **at your own risk**. Modifying system files may impact stability or future updates.
 ```
-
-You can save this as `README.md` and include it in your repository. Let me know if you'd like any further refinements!
