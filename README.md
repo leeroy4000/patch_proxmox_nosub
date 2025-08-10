@@ -19,7 +19,7 @@ The script automatically creates a backup of the file before making modification
 To apply the patch, execute the following command:
 
 ```bash
-sudo bash patch_proxmox_nosub.txt
+sudo bash patch_proxmox_nosub.sh
 ```
 
 ### 3. Verify the patch
