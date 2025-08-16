@@ -1,4 +1,3 @@
----
 
 ```markdown
 # Proxmox No-Subscription Patch Script
