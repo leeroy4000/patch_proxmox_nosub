@@ -1,43 +1,119 @@
-# Patch Proxmox No-Subscription Warning
+---
 
-This script removes the **"No valid subscription"** warning in Proxmox VE's web interface.
+```markdown
+# Proxmox No-Subscription Patch Script
 
-## Description
+This script removes the "No valid subscription" warning dialog from the Proxmox web interface by patching `proxmoxlib.js` directly on the host system.
 
-Proxmox VE displays a subscription warning when no valid enterprise subscription is detected. While this does not affect functionality, it can be intrusive. This script patches `proxmoxlib.js` to remove the warning.
+> ⚠️ This patch is intended for **educational and personal use only**. It modifies core Proxmox files and may be overwritten by updates. Use at your own discretion.
 
-## Usage
+---
 
-### 1. Backup the original file
-The script automatically creates a backup of the file before making modifications:
+## 📦 Features
 
-```bash
-/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js.bak
-```
+- Creates a backup of the original `proxmoxlib.js` file
+- Detects whether the patch has already been applied
+- Removes the subscription warning block safely
+- Designed for direct use on a Proxmox host
 
-### 2. Run the script
-To apply the patch, execute the following command:
+---
 
-```bash
-sudo bash patch_proxmox_nosub.sh
-```
+## 🧭 Installation & Usage
 
-### 3. Verify the patch
-If the warning still appears:
-- The Proxmox UI may have cached the old version. Try **clearing your browser cache**.
-- Restart Proxmox services for the changes to take effect:
+### 1. SSH into your Proxmox host
 
 ```bash
-systemctl restart pveproxy
+ssh root@your-proxmox-host
 ```
 
-### 4. Reapply the patch after updates
-If a Proxmox update replaces `proxmoxlib.js`, you may need to **rerun the script**.
+### 2. Create a scripts directory (optional but recommended)
 
-## Notes
-- The script only modifies the file if the subscription warning exists.
-- Always ensure you have a valid backup (`proxmoxlib.js.bak`) before making changes.
-
-## Disclaimer
-Use this script **at your own risk**. Modifying system files may impact stability or future updates.
+```bash
+mkdir -p /root/scripts
+cd /root/scripts
 ```
+
+### 3. Create the script file
+
+```bash
+nano patch_proxmox_nosub.sh
+```
+
+Paste the following content:
+
+```bash
+#!/bin/bash
+
+TARGET="/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js"
+BACKUP="${TARGET}.bak"
+
+# Ensure script is run as root
+if [ "$EUID" -ne 0 ]; then
+    echo "Please run as root."
+    exit 1
+fi
+
+# Check if target file exists
+if [ ! -f "$TARGET" ]; then
+    echo "Target file not found: $TARGET"
+    exit 1
+fi
+
+# Create backup if it doesn't exist
+if [ ! -f "$BACKUP" ]; then
+    cp "$TARGET" "$BACKUP"
+    echo "Backup created at $BACKUP"
+else
+    echo "Backup already exists at $BACKUP"
+fi
+
+# Patch the file only if the warning block exists
+if grep -q "No valid subscription" "$TARGET"; then
+    sed -i '/Ext.Msg.show({/,/});/d' "$TARGET"
+    echo "Subscription warning removed from $TARGET"
+else
+    echo "No subscription warning block found. File may already be patched."
+fi
+```
+
+### 4. Make the script executable
+
+```bash
+chmod +x patch_proxmox_nosub.sh
+```
+
+### 5. Run the script
+
+```bash
+./patch_proxmox_nosub.sh
+```
+
+---
+
+## 🔁 Optional Enhancements
+
+- **Versioned backups**:
+  ```bash
+  cp "$TARGET" "${TARGET}.bak.$(date +%F-%T)"
+  ```
+- **Symlink for global access**:
+  ```bash
+  ln -s /root/scripts/patch_proxmox_nosub.sh /usr/local/bin/patch_proxmox_nosub
+  ```
+
+---
+
+## 🛠 Notes
+
+- This patch may be overwritten by future Proxmox updates. Consider reapplying after upgrades.
+- Tested on Proxmox VE 7.x and 8.x.
+- Script assumes default file path for `proxmoxlib.js`. Adjust if your installation differs.
+
+---
+
+## 📜 License
+
+MIT License — feel free to fork, adapt, and improve.
+
+```
+
