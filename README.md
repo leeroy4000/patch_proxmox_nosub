@@ -2,9 +2,11 @@
 ```markdown
 # Proxmox No-Subscription Patch Script
 
-This script removes the "No valid subscription" warning dialog from the Proxmox web interface by patching `proxmoxlib.js` directly on the host system.
+This script removes the "No valid subscription" warning dialog from the Proxmox web
+interface by patching `proxmoxlib.js` directly on the host system.
 
-> ⚠️ This patch is intended for **educational and personal use only**. It modifies core Proxmox files and may be overwritten by updates. Use at your own discretion.
+> ⚠️ This patch is intended for **educational and personal use only**. It modifies
+core Proxmox files and may be overwritten by updates. Use at your own discretion.
 
 ---
 
@@ -104,9 +106,11 @@ chmod +x patch_proxmox_nosub.sh
 
 ## 🛠 Notes
 
-- This patch may be overwritten by future Proxmox updates. Consider reapplying after upgrades.
+- This patch may be overwritten by future Proxmox updates. Consider reapplying
+  after upgrades.
 - Tested on Proxmox VE 7.x and 8.x.
-- Script assumes default file path for `proxmoxlib.js`. Adjust if your installation differs.
+- Script assumes default file path for `proxmoxlib.js`. Adjust if your installation
+  differs.
 
 ---
 
